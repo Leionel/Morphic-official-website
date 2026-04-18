@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>墨行笔记 - 千里江山记 (Immersive Mode)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#c4eccf",
+                    "primary-container": "#97c4ff",
+                    "outline-variant": "#98b4db",
+                    "surface-container-high": "#dce9ff",
+                    "surface": "#f8f9ff",
+                    "inverse-on-surface": "#909eb4",
+                    "error-dim": "#70030f",
+                    "secondary-container": "#d2fbdd",
+                    "outline": "#617ca1",
+                    "on-tertiary-fixed": "#004e26",
+                    "on-secondary": "#e7ffec",
+                    "tertiary-fixed": "#a0fcb8",
+                    "secondary": "#436750",
+                    "error-container": "#f56965",
+                    "on-primary-container": "#003e6f",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed": "#97c4ff",
+                    "on-primary-fixed": "#00294c",
+                    "background": "#f8f9ff",
+                    "surface-container-highest": "#d3e4ff",
+                    "primary": "#1361a5",
+                    "on-surface": "#153454",
+                    "error": "#ac3434",
+                    "on-tertiary-container": "#006332",
+                    "on-primary": "#f7f9ff",
+                    "tertiary-fixed-dim": "#92eeab",
+                    "surface-dim": "#c4dcff",
+                    "surface-variant": "#d3e4ff",
+                    "on-error": "#fff7f6",
+                    "on-tertiary-fixed-variant": "#006e39",
+                    "on-background": "#153454",
+                    "surface-container-low": "#eff4ff",
+                    "on-secondary-container": "#3e624b",
+                    "surface-bright": "#f8f9ff",
+                    "secondary-dim": "#375b45",
+                    "surface-tint": "#1361a5",
+                    "inverse-primary": "#72aef8",
+                    "primary-fixed-dim": "#7bb7ff",
+                    "secondary-fixed": "#d2fbdd",
+                    "on-surface-variant": "#456184",
+                    "primary-dim": "#005595",
+                    "on-tertiary": "#e8ffe9",
+                    "surface-container": "#e5eeff",
+                    "tertiary-container": "#a0fcb8",
+                    "on-secondary-fixed": "#2c4f3a",
+                    "tertiary-dim": "#006031",
+                    "on-primary-fixed-variant": "#00477e",
+                    "tertiary": "#006e39",
+                    "on-error-container": "#65000b",
+                    "inverse-surface": "#020f1f",
+                    "on-secondary-fixed-variant": "#486c55"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif SC", "Noto Serif"],
+                    "body": ["Noto Serif SC", "Noto Serif"],
+                    "label": ["Noto Serif SC", "Noto Serif"]
+            }
+          }
+        }
+      }
+    </script>
+<style>body {
+    font-family: "Noto Serif SC", serif
+    }
+/* Noise overlay for texture */
+.noise-bg {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none
+    }
+/* Silk & Mountain Background Simulation */
+.canvas-bg {
+    background-color: #f0ebe1;
+    /* Rich brownish silk tone base */
+    background-image: linear-gradient(to bottom, rgba(240, 235, 225, 0.98), rgba(240, 235, 225, 0.95)), url(https://lh3.googleusercontent.com/aida-public/AB6AXuCEkUHahJDYyX1_S4j1RAlUdsDkfF_op05Ceww6cyRdKzzyVt_uwroHLR97VGwIaZzH8tDt92smd0ye8NPK5JBRdDKam3RCzXpo03a_ZsMBxlu_sZFoTks8M5cv8Tc9KpFiukUZaeb7X3z4E_ETw1Jx3ZskcCgCzy5-3ojtneGQJRQWBB8os_xNbkcaqGWULJZENw4E37MACqBkhsUYEfLfBpq2KaGIsVR1nKEJUICUXGy2xfdAv5uLv1O4BfxZ32dUMUTwaXHilc1m);
+    /* Placeholder for mountain texture */
+    background-size: cover;
+    background-position: center
+    }
+/* Seal Style Button */
+.seal-btn {
+    background-color: #c0392b;
+    /* Vermilion red */
+    color: #fff7f6;
+    border: 2px solid #a93226;
+    border-radius: 0.125rem;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    font-family: "Noto Serif SC", serif;
+    font-weight: 900;
+    letter-spacing: 0.1em
+    }</style>
+</head>
+<body class="overflow-hidden h-screen w-screen relative canvas-bg">
+<!-- Noise Texture Overlay -->
+<div class="absolute inset-0 noise-bg z-0"></div>
+<!-- Background Mountain Imagery -->
+<div class="absolute inset-0 z-0 opacity-5 blur-sm pointer-events-none grayscale sepia-[.3]" data-alt="very subtle, light, ethereal, and misty cyan and azure traditional chinese mountain silhouettes stretching across a vast landscape, painted in watercolor style, fading into the distance with strong atmospheric perspective" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCIfQFX7pYjNhSVxAlpcSNQlimylHnUIIHWKbDlYVKEuGQuoqIa7S4ITNhwl0kjNC8Y8mg2XDbfoa9timzIWThwUx5jQJQEch8i4wR05IBFVdIQCZElbyJJ-DTuCOLxlbkM-uWlCUf32GshBoTiLbOzi91-KGzygMPdSOsCp-yDGDva_HlHAUq9vwJJRPAKRY1s0H9xX_2fRyrRa_wFfVLsveZWTrsMLL9EPWA_7Oy80l56B8xzuKGb7xisSkabv1T9WH1oT_BLcuIa'); background-size: cover; background-position: bottom;">
+</div>
+<!-- Immersive Mode Expansion Triggers -->
+<!-- Top Edge Trigger -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-12 flex justify-center items-start pt-1 z-50 cursor-pointer group">
+<span class="material-symbols-outlined text-4xl text-[#1A4571]/20 group-hover:text-[#1A4571]/70 transition-all duration-700 ease-in-out drop-shadow-sm font-light">keyboard_arrow_down</span>
+</div>
+<!-- Left Edge Trigger -->
+<div class="absolute top-1/2 left-0 -translate-y-1/2 w-12 h-48 flex justify-start items-center pl-1 z-50 cursor-pointer group">
+<span class="material-symbols-outlined text-4xl text-[#1A4571]/20 group-hover:text-[#1A4571]/70 transition-all duration-700 ease-in-out drop-shadow-sm font-light">keyboard_arrow_right</span>
+</div>
+<!-- Main Canvas Area -->
+<main class="w-full h-full relative z-10 cursor-crosshair">
+<!-- Canvas content would go here. Left empty for user to draw in extreme immersive mode. -->
+</main>
+<button aria-label="Add New" class="fixed bottom-8 right-8 w-14 h-14 rounded-full flex items-center justify-center bg-[#fdfcf8] border border-[#d4cfc1] shadow-md hover:bg-[#f5f2e9] transition-all duration-300 z-50 group cursor-pointer">
+<span class="text-3xl text-[#1A4571] font-['Noto_Serif_SC'] font-light group-hover:scale-110 transition-transform duration-300">+</span>
+<!-- Subtle inner jade-like glow or ring if needed, but keeping it minimalist for the scholar theme -->
+<div class="absolute inset-0 rounded-full border border-white/40 pointer-events-none"></div>
+</button></body></html>

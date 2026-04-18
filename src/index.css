@@ -1,0 +1,335 @@
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Zhi+Mang+Xing&family=Long+Cang&display=swap');
+
+/* ============================================
+   墨行笔记 (Morphic) - Global Design System
+   Colors: Scholar’s Ink & Azure Landscape
+   ============================================ */
+
+:root {
+  /* ── Brand Colors (Ink & Paper) ── */
+  --green-50: #fdfcf8;
+  --green-100: #f5f2e9;
+  --green-200: #ebe1cc;
+  --green-300: #dfd3bc;
+  --green-400: #c7bba7;
+  --green-500: #8b7f6f;
+  --green-600: #5c534a;
+  --green-700: #3a332c;
+  --green-800: #26211d;
+  --green-900: #14110e;
+
+  /* ── Neutral Colors ── */
+  --white: #ffffff;
+  --gray-50: #fdfcf8;
+  --gray-100: #f5f2e9;
+  --gray-200: #ebe1cc;
+  --gray-300: #dfd3bc;
+  --gray-400: #c7bba7;
+  --gray-500: #8b7f6f;
+  --gray-600: #5c534a;
+  --gray-700: #3a332c;
+  --gray-800: #26211d;
+  --gray-900: #14110e;
+  --black: #0a0a0a;
+
+  --primary: #a83a2d; /* cinnabar */
+  --secondary: #2b6a9a; /* indigo */
+  --tertiary: #4fa18c; /* azure */
+  --ink: #3a332c;
+  --outline: #8b7f6f;
+  --outline-variant: #c7bba7;
+  --error: #ac3434;
+  --error-container: #f56965;
+  --on-error: #fff7f6;
+  --seal: #a83a2d;
+  --seal-border: #8a2e23;
+
+  --primary-rgb: 168 58 45;
+  --secondary-rgb: 43 106 154;
+  --tertiary-rgb: 79 161 140;
+  --ink-rgb: 58 51 44;
+  --outline-rgb: 139 127 111;
+  --outline-variant-rgb: 199 187 167;
+  --error-rgb: 172 52 52;
+  --error-container-rgb: 245 105 101;
+  --seal-rgb: 168 58 45;
+
+  --focus-ring: rgba(168, 58, 45, 0.4);
+
+  /* ── Semantic Colors ── */
+  --bg-primary: #ebe1cc; /* Changed from #dfd3bc to a slightly brighter/warmer beige */
+  --bg-secondary: #f5f2e9;
+  --bg-card: rgba(253, 252, 248, 0.78);
+  --bg-card-hover: rgba(253, 252, 248, 0.9);
+  --text-primary: var(--ink);
+  --text-secondary: #5c534a;
+  --text-muted: #7a6f63;
+  --border-subtle: rgba(var(--outline-variant-rgb), 0.35);
+  --border-active: rgba(var(--primary-rgb), 0.65);
+
+  /* ── Gradients ── */
+  --gradient-green: linear-gradient(135deg, #a83a2d, #d15647);
+  --gradient-green-soft: linear-gradient(135deg, rgba(168, 58, 45, 0.15), rgba(43, 106, 154, 0.08));
+  --gradient-hero: radial-gradient(ellipse at 50% 0%, rgba(168, 58, 45, 0.12) 0%, transparent 60%);
+  --gradient-glow: radial-gradient(circle, rgba(168, 58, 45, 0.15) 0%, transparent 70%);
+
+  /* ── Typography ── */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Noto Serif SC', 'Georgia', serif;
+  --font-calligraphy: 'Zhi Mang Xing', 'Ma Shan Zheng', cursive;
+  --font-xingkai: 'STXingkai', '华文行楷', 'FZXingKai-S04S', '方正行楷', 'Long Cang', cursive;
+
+  /* ── Spacing ── */
+  --section-padding: 120px 0;
+  --container-width: 1200px;
+  --nav-height: 72px;
+
+  /* ── Effects ── */
+  --glass-bg: rgba(253, 252, 248, 0.65);
+  --glass-border: rgba(var(--ink-rgb), 0.15);
+  --glass-blur: blur(24px);
+  --shadow-card: 0 32px 64px -12px rgba(var(--ink-rgb), 0.08);
+  --shadow-glow: 0 0 40px rgba(var(--primary-rgb), 0.12);
+
+  /* ── Transitions ── */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #07121e;
+    --bg-secondary: #0b1a2b;
+    --bg-card: rgba(12, 26, 43, 0.66);
+    --bg-card-hover: rgba(16, 35, 56, 0.78);
+    --text-primary: #f2f7ff;
+    --text-secondary: #c0cddd;
+    --text-muted: #8ea3bc;
+    --border-subtle: rgba(var(--outline-variant-rgb), 0.18);
+    --border-active: rgba(var(--primary-rgb), 0.55);
+    --glass-bg: rgba(11, 20, 32, 0.65);
+    --glass-border: rgba(var(--outline-variant-rgb), 0.12);
+    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* ── Reset & Base ── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: multiply;
+}
+
+#root {
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+}
+
+input {
+  font-family: inherit;
+  outline: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ── Utility Classes ── */
+.container {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section {
+  padding: var(--section-padding);
+  position: relative;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: rgba(var(--primary-rgb), 0.12);
+  border: 1px solid var(--border-subtle);
+  border-radius: 100px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--primary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.section-subtitle {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  line-height: 1.7;
+}
+
+.text-gradient {
+  background: var(--gradient-green);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Scrollbar Styling ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--outline-rgb), 0.35);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--outline-rgb), 0.55);
+}
+
+/* ── Keyframe Animations ── */
+@keyframes breathe {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes typing-cursor {
+  0%, 100% { border-color: var(--green-400); }
+  50% { border-color: transparent; }
+}
+
+/* ── Selection ── */
+::selection {
+  background: rgba(var(--primary-rgb), 0.28);
+  color: var(--text-primary);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  :root {
+    --section-padding: 80px 0;
+    --nav-height: 60px;
+  }
+
+  .section-title {
+    font-size: clamp(1.5rem, 6vw, 2.25rem);
+  }
+}

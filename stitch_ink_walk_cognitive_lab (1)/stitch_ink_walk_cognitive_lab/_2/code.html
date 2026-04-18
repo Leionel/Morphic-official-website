@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Moxing Notes - Immersive Canvas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ac3434",
+                        "on-background": "#153454",
+                        "on-tertiary-container": "#006332",
+                        "on-surface": "#153454",
+                        "on-error": "#fff7f6",
+                        "on-tertiary": "#e8ffe9",
+                        "surface-dim": "#c4dcff",
+                        "on-primary-fixed-variant": "#00477e",
+                        "outline": "#617ca1",
+                        "inverse-surface": "#020f1f",
+                        "secondary-container": "#d2fbdd",
+                        "outline-variant": "#98b4db",
+                        "surface-container-highest": "#d3e4ff",
+                        "surface-variant": "#d3e4ff",
+                        "error-container": "#f56965",
+                        "primary-container": "#97c4ff",
+                        "surface-tint": "#1361a5",
+                        "on-tertiary-fixed-variant": "#006e39",
+                        "inverse-on-surface": "#909eb4",
+                        "secondary": "#436750",
+                        "error-dim": "#70030f",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary-fixed-variant": "#486c55",
+                        "on-secondary": "#e7ffec",
+                        "primary-fixed-dim": "#7bb7ff",
+                        "surface-container-low": "#eff4ff",
+                        "tertiary-fixed": "#a0fcb8",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#3e624b",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-fixed": "#d2fbdd",
+                        "tertiary-fixed-dim": "#92eeab",
+                        "secondary-fixed-dim": "#c4eccf",
+                        "primary-fixed": "#97c4ff",
+                        "on-primary-container": "#003e6f",
+                        "secondary-dim": "#375b45",
+                        "surface-container": "#e5eeff",
+                        "background": "#f8f9ff",
+                        "primary-dim": "#005595",
+                        "on-primary": "#f7f9ff",
+                        "primary": "#1361a5",
+                        "tertiary-dim": "#006031",
+                        "tertiary-container": "#a0fcb8",
+                        "inverse-primary": "#72aef8",
+                        "on-tertiary-fixed": "#004e26",
+                        "on-error-container": "#65000b",
+                        "on-surface-variant": "#456184",
+                        "surface": "#f8f9ff",
+                        "tertiary": "#006e39",
+                        "on-primary-fixed": "#00294c",
+                        "on-secondary-fixed": "#2c4f3a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif SC", "serif"],
+                        "body": ["Noto Serif SC", "serif"],
+                        "label": ["Noto Serif SC", "serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Noto Serif SC', serif;
+            position: relative;
+            overflow: hidden; /* Hide scrollbars for app-like feel */
+        }
+        
+        /* Noise overlay for texture */
+        .noise-bg {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* Silk & Mountain Background Simulation */
+        .canvas-bg {
+            background-color: #f0ebe1;
+            /* Rich brownish silk tone base */
+            background-image: linear-gradient(to bottom, rgba(240, 235, 225, 0.98), rgba(240, 235, 225, 0.95)), url(https://lh3.googleusercontent.com/aida-public/AB6AXuCEkUHahJDYyX1_S4j1RAlUdsDkfF_op05Ceww6cyRdKzzyVt_uwroHLR97VGwIaZzH8tDt92smd0ye8NPK5JBRdDKam3RCzXpo03a_ZsMBxlu_sZFoTks8M5cv8Tc9KpFiukUZaeb7X3z4E_ETw1Jx3ZskcCgCzy5-3ojtneGQJRQWBB8os_xNbkcaqGWULJZENw4E37MACqBkhsUYEfLfBpq2KaGIsVR1nKEJUICUXGy2xfdAv5uLv1O4BfxZ32dUMUTwaXHilc1m);
+            /* Placeholder for mountain texture */
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Glassmorphism for Modal */
+        .glass-panel {
+            background: rgba(245, 242, 233, 0.85); /* washi paper texture equivalent */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(21, 52, 84, 0.15); /* delicate ink border */
+            box-shadow: 0 32px 64px -12px rgba(21, 52, 84, 0.1); 
+        }
+
+        /* Minimal scrollbar for inner lists */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(97, 124, 161, 0.2); /* outline at low opacity */
+            border-radius: 4px;
+        }
+        
+        .ink-text {
+            color: #153454;
+        }
+
+        /* Seal Style Button */
+        .seal-btn {
+            background-color: #c0392b;
+            /* Vermilion red */
+            color: #fff7f6;
+            border: 2px solid #a93226;
+            border-radius: 0.125rem;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+            font-family: "Noto Serif SC", serif;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+        }
+    </style>
+</head>
+<body class="text-on-surface h-screen w-screen relative canvas-bg">
+<!-- Noise Texture Overlay -->
+<div class="absolute inset-0 noise-bg z-50 pointer-events-none"></div>
+<!-- Background Mountain Imagery -->
+<div class="absolute inset-0 z-0 opacity-5 blur-sm pointer-events-none grayscale sepia-[.3]" data-alt="very subtle, light, ethereal, and misty cyan and azure traditional chinese mountain silhouettes stretching across a vast landscape, painted in watercolor style, fading into the distance with strong atmospheric perspective" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCIfQFX7pYjNhSVxAlpcSNQlimylHnUIIHWKbDlYVKEuGQuoqIa7S4ITNhwl0kjNC8Y8mg2XDbfoa9timzIWThwUx5jQJQEch8i4wR05IBFVdIQCZElbyJJ-DTuCOLxlbkM-uWlCUf32GshBoTiLbOzi91-KGzygMPdSOsCp-yDGDva_HlHAUq9vwJJRPAKRY1s0H9xX_2fRyrRa_wFfVLsveZWTrsMLL9EPWA_7Oy80l56B8xzuKGb7xisSkabv1T9WH1oT_BLcuIa'); background-size: cover; background-position: bottom;">
+</div>
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-8 fixed top-0 z-50 bg-stone-100/70 dark:bg-slate-900/70 backdrop-blur-xl docked full-width top-0 h-16 font-serif text-lg tracking-widest text-[#387abf] dark:text-[#387abf] flat no shadows with 3% noise overlay">
+<div class="flex items-center space-x-4"><div class="flex items-center -ml-4 mr-2">
+<button aria-label="Back" class="p-3 flex items-center justify-center text-[#1A4571] hover:bg-[#1A4571]/10 rounded-full transition-colors">
+<span class="material-symbols-outlined !text-xl font-bold">arrow_back_ios</span>
+</button>
+<div class="h-6 w-px bg-slate-300/30 mx-1"></div>
+<button aria-label="Undo" class="p-3 flex items-center justify-center text-[#1A4571] hover:bg-[#1A4571]/10 rounded-full transition-colors">
+<span class="material-symbols-outlined !text-2xl">undo</span>
+</button>
+<button aria-label="Redo" class="p-3 flex items-center justify-center text-[#1A4571] hover:bg-[#1A4571]/10 rounded-full transition-colors">
+<span class="material-symbols-outlined !text-2xl">redo</span>
+</button><button aria-label="Hide" class="p-3 flex items-center justify-center text-[#1A4571] hover:bg-[#1A4571]/10 rounded-full transition-colors">
+<span class="material-symbols-outlined !text-2xl">keyboard_arrow_up</span>
+</button>
+</div>
+<span class="text-2xl font-serif font-black text-slate-800 dark:text-slate-100 ml-2">千里江山记</span>
+</div>
+<div class="flex-1 flex justify-center">
+<span class="font-bold text-on-surface">未命名</span>
+</div>
+<div class="flex items-center space-x-6 text-slate-500 dark:text-slate-400">
+<button aria-label="Search" class="hover:text-[#2b874f] transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button aria-label="History" class="hover:text-[#2b874f] transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</button>
+<button aria-label="Settings" class="hover:text-[#2b874f] transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="seal-btn px-4 py-1 text-sm transition-all duration-300 hover:scale-95 ease-in-out">
+                导出
+            </button>
+</div>
+</header>
+<!-- SideNavBar (Toolbar) -->
+<nav class="fixed left-0 top-16 h-[calc(100vh-64px)] w-20 border-r border-slate-300/10 bg-[#6a788d]/10 dark:bg-slate-950/20 backdrop-blur-md text-[#387abf] dark:text-[#387abf] font-serif text-sm flex flex-col items-center py-8 space-y-8 shadow-[4px_0_24px_rgba(0,0,0,0.05)] z-40 transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1)">
+<div class="flex flex-col items-center mb-4">
+<span class="font-serif text-slate-700 dark:text-slate-200 font-bold text-lg">文房</span>
+<span class="text-xs text-slate-500">砚池</span>
+</div>
+<div class="flex flex-col space-y-6 flex-1 overflow-y-auto w-full px-2 no-scrollbar">
+<!-- 撤销 Undo -->
+<!-- 重做 Redo -->
+<!-- 笔触 Brush (Active) -->
+<button class="flex flex-col items-center p-2 bg-[#387abf]/10 text-[#387abf] rounded-xl shadow-inner group">
+<span class="material-symbols-outlined mb-1" data-icon="brush" data-weight="fill" style="font-variation-settings: 'FILL' 1;">brush</span>
+<span class="text-[10px] font-bold">笔触</span>
+</button>
+<!-- 橡皮 Eraser -->
+<button class="flex flex-col items-center p-2 text-slate-600 dark:text-slate-400 hover:bg-[#5b7f67]/10 hover:text-[#5b7f67] transition-colors duration-300 group rounded-lg">
+<span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform" data-icon="ink_eraser">ink_eraser</span>
+<span class="text-[10px]">橡皮</span>
+</button>
+<!-- 选择 Select -->
+<button class="flex flex-col items-center p-2 text-slate-600 dark:text-slate-400 hover:bg-[#5b7f67]/10 hover:text-[#5b7f67] transition-colors duration-300 group rounded-lg">
+<span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform" data-icon="ads_click">ads_click</span>
+<span class="text-[10px]">选择</span>
+</button>
+<!-- 文字 Text -->
+<button class="flex flex-col items-center p-2 text-slate-600 dark:text-slate-400 hover:bg-[#5b7f67]/10 hover:text-[#5b7f67] transition-colors duration-300 group rounded-lg">
+<span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform" data-icon="text_fields">text_fields</span>
+<span class="text-[10px]">文字</span>
+</button>
+<!-- 形状 Shapes -->
+<button class="flex flex-col items-center p-2 text-slate-600 dark:text-slate-400 hover:bg-[#5b7f67]/10 hover:text-[#5b7f67] transition-colors duration-300 group rounded-lg">
+<span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform" data-icon="category">category</span>
+<span class="text-[10px]">形状</span>
+</button>
+<!-- 套索 Lasso -->
+<button class="flex flex-col items-center p-2 text-slate-600 dark:text-slate-400 hover:bg-[#5b7f67]/10 hover:text-[#5b7f67] transition-colors duration-300 group rounded-lg">
+<span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform" data-icon="gesture">gesture</span>
+<span class="text-[10px]">套索</span>
+</button>
+<!-- 图层 Layers -->
+<button class="flex flex-col items-center p-2 text-slate-600 dark:text-slate-400 hover:bg-[#5b7f67]/10 hover:text-[#5b7f67] transition-colors duration-300 group rounded-lg">
+<span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform" data-icon="layers">layers</span>
+<span class="text-[10px]">图层</span>
+</button>
+</div>
+<!-- 隐藏 Hide Toolbar -->
+<div class="mt-auto pt-4 border-t border-slate-300/10 w-full flex justify-center">
+<button class="flex flex-col items-center p-2 text-slate-600 dark:text-slate-400 hover:bg-[#5b7f67]/10 hover:text-[#5b7f67] transition-colors duration-300 group rounded-lg">
+<span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform" data-icon="menu_open">menu_open</span>
+<span class="text-[10px]">隐藏</span>
+</button>
+</div>
+</nav>
+<!-- Main Area containing Modal -->
+<main class="ml-20 mt-16 w-[calc(100vw-5rem)] h-[calc(100vh-4rem)] relative z-10 flex items-center justify-center">
+<!-- Central Modal Wrapper -->
+<div class="relative z-40 w-11/12 max-w-5xl h-[819px] flex flex-col glass-panel rounded-xl overflow-hidden">
+<!-- Modal Header -->
+<div class="flex justify-between items-center px-8 py-6 border-b border-outline-variant/15 bg-white/30">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container shadow-sm">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<div>
+<h1 class="text-3xl font-headline font-semibold ink-text tracking-wider">功能雅集</h1>
+<p class="text-sm text-on-surface-variant mt-1">学者分析套件</p>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-variant/50 hover:text-on-surface transition-colors ease-in-out duration-300">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Content - Bento Grid Layout -->
+<div class="flex-1 overflow-y-auto p-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+<!-- Category 1: 理解 -->
+<div class="bg-white/40 hover:bg-white/60 p-6 rounded-lg transition-colors ease-in-out duration-300 group h-full flex flex-col border border-slate-200/50">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary text-2xl group-hover:scale-110 transition-transform duration-300">menu_book</span>
+<h2 class="text-xl font-headline font-medium text-on-surface">[理解]</h2>
+</div>
+<ul class="space-y-3 text-sm text-on-surface-variant flex-1">
+<li class="flex items-center gap-2 hover:text-primary transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-primary/50"></span> 解释</li>
+<li class="flex items-center gap-2 hover:text-primary transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-primary/50"></span> 举例</li>
+<li class="flex items-center gap-2 hover:text-primary transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-primary/50"></span> 对比</li>
+<li class="flex items-center gap-2 hover:text-primary transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-primary/50"></span> 推导</li>
+<li class="flex items-center gap-2 hover:text-primary transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-primary/50"></span> 提问</li>
+</ul>
+</div>
+<!-- Category 2: 可视化 -->
+<div class="bg-white/40 hover:bg-white/60 p-6 rounded-lg transition-colors ease-in-out duration-300 group h-full flex flex-col border border-slate-200/50">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-secondary text-2xl group-hover:scale-110 transition-transform duration-300">brush</span>
+<h2 class="text-xl font-headline font-medium text-on-surface">[可视化]</h2>
+</div>
+<ul class="space-y-3 text-sm text-on-surface-variant flex-1">
+<li class="flex items-center gap-2 hover:text-secondary transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-secondary/50"></span> 画图</li>
+<li class="flex items-center gap-2 hover:text-secondary transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-secondary/50"></span> 模拟</li>
+<li class="flex items-center gap-2 hover:text-secondary transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-secondary/50"></span> 算法演示</li>
+</ul>
+</div>
+<!-- Category 3: 思维 -->
+<div class="bg-white/40 hover:bg-white/60 p-6 rounded-lg transition-colors ease-in-out duration-300 group h-full flex flex-col border border-slate-200/50">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-tertiary text-2xl group-hover:scale-110 transition-transform duration-300">psychology_alt</span>
+<h2 class="text-xl font-headline font-medium text-on-surface">[思维]</h2>
+</div>
+<ul class="space-y-3 text-sm text-on-surface-variant flex-1">
+<li class="flex items-center gap-2 hover:text-tertiary transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-tertiary/50"></span> 展开</li>
+<li class="flex items-center gap-2 hover:text-tertiary transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-tertiary/50"></span> 创意</li>
+<li class="flex items-center gap-2 hover:text-tertiary transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-tertiary/50"></span> 联合创作</li>
+<li class="flex items-center gap-2 hover:text-tertiary transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-tertiary/50"></span> 概念延伸</li>
+</ul>
+</div>
+<!-- Category 4: 整理 -->
+<div class="bg-white/40 hover:bg-white/60 p-6 rounded-lg transition-colors ease-in-out duration-300 group h-full flex flex-col border border-slate-200/50">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary-dim text-2xl group-hover:scale-110 transition-transform duration-300">folder_special</span>
+<h2 class="text-xl font-headline font-medium text-on-surface">[整理]</h2>
+</div>
+<ul class="space-y-3 text-sm text-on-surface-variant flex-1">
+<li class="flex items-center gap-2 hover:text-primary-dim transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-primary-dim/50"></span> 整理</li>
+<li class="flex items-center gap-2 hover:text-primary-dim transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-primary-dim/50"></span> 文档</li>
+<li class="flex items-center gap-2 hover:text-primary-dim transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-primary-dim/50"></span> 总结</li>
+<li class="flex items-center gap-2 hover:text-primary-dim transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-primary-dim/50"></span> 对比表</li>
+</ul>
+</div>
+<!-- Category 5: 学习工具 -->
+<div class="bg-white/40 hover:bg-white/60 p-6 rounded-lg transition-colors ease-in-out duration-300 group h-full flex flex-col border border-slate-200/50">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-secondary-dim text-2xl group-hover:scale-110 transition-transform duration-300">school</span>
+<h2 class="text-xl font-headline font-medium text-on-surface">[学习工具]</h2>
+</div>
+<ul class="space-y-3 text-sm text-on-surface-variant flex-1">
+<li class="flex items-center gap-2 hover:text-secondary-dim transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-secondary-dim/50"></span> 番茄钟</li>
+<li class="flex items-center gap-2 hover:text-secondary-dim transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-secondary-dim/50"></span> 出题</li>
+<li class="flex items-center gap-2 hover:text-secondary-dim transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-secondary-dim/50"></span> 讲解</li>
+<li class="flex items-center gap-2 hover:text-secondary-dim transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-secondary-dim/50"></span> 验证</li>
+</ul>
+</div>
+<!-- Category 6: 内容 -->
+<div class="bg-white/40 hover:bg-white/60 p-6 rounded-lg transition-colors ease-in-out duration-300 group h-full flex flex-col border border-slate-200/50">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-on-primary-container text-2xl group-hover:scale-110 transition-transform duration-300">video_library</span>
+<h2 class="text-xl font-headline font-medium text-on-surface">[内容]</h2>
+</div>
+<ul class="space-y-3 text-sm text-on-surface-variant flex-1">
+<li class="flex items-center gap-2 hover:text-on-primary-container transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-on-primary-container/50"></span> 视频</li>
+<li class="flex items-center gap-2 hover:text-on-primary-container transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-on-primary-container/50"></span> 搜索</li>
+<li class="flex items-center gap-2 hover:text-on-primary-container transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-on-primary-container/50"></span> 总结</li>
+</ul>
+</div>
+<!-- Category 7: 图形 -->
+<div class="bg-white/40 hover:bg-white/60 p-6 rounded-lg transition-colors ease-in-out duration-300 group h-full flex flex-col border border-slate-200/50">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-on-tertiary-container text-2xl group-hover:scale-110 transition-transform duration-300">dashboard_customize</span>
+<h2 class="text-xl font-headline font-medium text-on-surface">[图形]</h2>
+</div>
+<ul class="space-y-3 text-sm text-on-surface-variant flex-1">
+<li class="flex items-center gap-2 hover:text-on-tertiary-container transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-on-tertiary-container/50"></span> 草图识别</li>
+<li class="flex items-center gap-2 hover:text-on-tertiary-container transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-on-tertiary-container/50"></span> 图像生成</li>
+<li class="flex items-center gap-2 hover:text-on-tertiary-container transition-colors cursor-pointer"><span class="w-1 h-1 rounded-full bg-on-tertiary-container/50"></span> 学术图</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
